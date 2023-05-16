@@ -1,0 +1,27 @@
+.home-container {
+    height: calc(100vh - 4rem);
+    .chat-item {
+        margin: 13px 0;
+        &.right {
+            justify-content: flex-end;
+            .message {
+                border-radius: 12px 0px 12px 12px;
+                padding: 8px 12px;
+                background-color: #21EA65;
+            }
+        }
+        &.left {
+            justify-content: flex-start;
+            align-items: start;
+            .avatar {
+                margin: 0 11px 0 0;
+            }
+            .message {
+                border-radius: 0px 12px 12px 12px;
+                background-color: #ffffff;
+                padding: 0 12px 8px;
+                min-width: 660px;
+            }
+        }
+    }
+}

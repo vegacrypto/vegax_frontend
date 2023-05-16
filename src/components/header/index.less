@@ -1,0 +1,17 @@
+.header-container {
+    .menu-item {
+        &:hover {
+            border: none;
+            img {
+                transition: all .3s;
+                transform: rotate(180deg);
+            }
+        }
+    }
+    .ant-menu-submenu-open::after,
+    .ant-menu-submenu:hover::after,
+    .ant-menu-submenu-active::after
+     {
+        border-bottom-color: transparent !important;
+    }
+}
