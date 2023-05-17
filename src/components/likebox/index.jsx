@@ -4,9 +4,9 @@ import { PlayCircleFilled } from '@ant-design/icons'
 import Share from '@/common/svg/share.svg'
 import Like from '@/common/svg/like.svg'
 
-const menus = [
+const items = [
     {
-        label: 'Clicking me will not close the menu also.',
+        label: 'Clicking me will',
         key: '2',
     },
     {
@@ -24,7 +24,7 @@ const LikeBox = () => {
                 <div>已设为最优解，您将获得 <span className='text-[#FF6B00]'>2积分</span></div>
             </div>
             <div className='ml-auto'>数据来源</div>
-            <Dropdown menu={{ menus }} trigger={['click']} placement="bottom">
+            <Dropdown menu={{ items: items }} trigger={['click']} placement="bottom">
                 <button className='border border-[#EAF4F0] py-2 px-2 rounded-full flex items-center ml-2'>
                     <span className='mr-4'>ChatGPT</span><PlayCircleFilled className='transform rotate-90'/>
                 </button>

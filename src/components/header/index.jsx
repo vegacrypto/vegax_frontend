@@ -6,7 +6,7 @@ import Arrow from '@/common/svg/downarrow.svg'
 import './index.less'
 
 const { Header } = Layout
-const items = [
+const menus = [
     {
         key: 'information',
         label: 
@@ -46,7 +46,7 @@ const HeaderComponent = () => {
                 <BellOutlined className='cursor-pointer'/>
                 <SettingOutlined className='cursor-pointer'/>
             </div>
-            <Menu onClick={() => { this.onClick() }} style={{border: 'none'}} mode="horizontal" items={items} />
+            <Menu onClick={() => { this.onClick() }} style={{border: 'none'}} mode="horizontal" items={menus} />
         </Header>
     )
 }

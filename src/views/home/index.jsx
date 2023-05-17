@@ -64,7 +64,7 @@ const Home = () => {
                             <div className='chat-item flex left'>
                                 <img className='w-10 avatar' src={BotImg} alt="" />
                                 <div className='message text-sm'>
-                                    {/* <Tabs defaultActiveKey="1" items={tabs}/> */}
+                                    <Tabs defaultActiveKey="1" items={tabs}/>
                                     <LikeBox/>
                                 </div>
                             </div>
@@ -72,7 +72,7 @@ const Home = () => {
 
                         {/* 底部按钮区 */}
                         <div className='flex items-center w-full px-8 pb-5'>
-                            <Dropdown menu={ menus } trigger={['click']} placement="top">
+                            <Dropdown menu={{ items: menus }} trigger={['click']} placement="top">
                                 <button className='text-base bg-black text-white py-3 px-8 rounded-xl flex items-center'>
                                     <p className='mr-4'>任务类型</p><PlayCircleFilled className='transform rotate-90'/>
                                 </button>
