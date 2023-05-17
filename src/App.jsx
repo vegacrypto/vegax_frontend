@@ -1,4 +1,5 @@
 import React, { Fragment } from "react";
+import { ConfigProvider, theme } from 'antd';
 import { Route, Switch, Redirect, BrowserRouter } from 'react-router-dom'
 import Home from '@/views/home'
 import Login from '@/views/login'
@@ -7,7 +8,13 @@ import './index.css'
 
 function App() {
     return (
-        <Fragment>
+        <ConfigProvider
+            theme={{
+                token: {
+                    colorPrimary: '#333',
+                },
+            }}
+        >
             <BrowserRouter>
                 <Switch>
                     <Route path="/login" component={Login} />
@@ -16,7 +23,7 @@ function App() {
                     <Redirect to={"/home"} />
                 </Switch>
             </BrowserRouter>
-        </Fragment>
+        </ConfigProvider>
     )
 }
 
