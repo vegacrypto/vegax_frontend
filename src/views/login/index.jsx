@@ -1,28 +1,44 @@
-import React, { Component, Fragment } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import React, { useState, Fragment, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom'
-import { setLoginState } from '@/store/module/user.js'
+import { Button } from 'antd';
+import { RightOutlined } from '@ant-design/icons';
 import './index.less';
+import Login from './components/login.jsx'
+import Register from './components/register.jsx'
 
 
-const Login = () => {
-    const loginState = useSelector((state) => state.user.loginState)
-    const dispatch = useDispatch()
+const LoginMain = () => {
+    const token = useSelector((state) => state.user.token)
     const history = useHistory()
+    const [loginType, setLoginType] = useState('');
+
+    // useEffect(() => {
+    //     // 已登录
+    //     if (!!token) {
+    //         gotoHome()
+    //     }
+    // }, [])
 
     const gotoHome = () => {
-        dispatch(setLoginState(1))
         history.push('/home')
     }
 
     return (
         <Fragment>
             <div className='login-container flex flex-col items-center justify-center'>
-                <button className='bg-[#65C26D] text-xl px-12 py-3 rounded-full text-white' onClick={() => {
-                    gotoHome()
-                }}>Get Start</button>
+                <div className='wrapper'>
+                    { loginType == 'register' ? <Register /> : <Login />}
+                    <div className='text-right w-full'>
+                        {
+                            loginType == 'register' ? 
+                            <Button onClick={() => { setLoginType('login') }} type="link">Login<RightOutlined /></Button>:
+                            <Button onClick={() => { setLoginType('register') }} type="link">register<RightOutlined /></Button>
+                        }
+                    </div>
+                </div>
             </div>
         </Fragment>
     )
 }
-export default Login
+export default LoginMain

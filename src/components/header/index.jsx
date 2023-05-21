@@ -3,7 +3,8 @@ import { Layout, Avatar, Dropdown } from 'antd'
 import { MessageOutlined, BellOutlined, SettingOutlined } from '@ant-design/icons'
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom'
-import { setLoginState } from '@/store/module/user.js'
+import { setToken } from '@/store/module/user.js'
+import { removeToken } from '@/utils/auth'
 import LOGO from '@/common/svg/logo.svg'
 import Arrow from '@/common/svg/downarrow.svg'
 import './index.less'
@@ -31,7 +32,8 @@ const HeaderComponent = () => {
 
     const onClick = (e) => {
         if (e.key == 1) { // logout
-            dispatch(setLoginState(''))
+            dispatch(setToken(''))
+            removeToken()
             history.push('/login')
         }
     }
