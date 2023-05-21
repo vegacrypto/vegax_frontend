@@ -1,19 +1,20 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { getToken, setCookies } from "@/utils/auth";
 
 export const userSlice = createSlice({ // 创建一个切片
     name: 'user',
     initialState: {
-      loginState: null,
+      token: getToken(),
     },
     reducers: {
-      setLoginState: (state, action) => {
-        console.log('action-->',action)
-        state.loginState = action.payload
+      setToken: (state, action) => {
+        state.token = action.payload
+        setCookies(state.token)
       },
     },
   })
   
   // Action creators are generated for each case reducer function
-  export const { setLoginState } = userSlice.actions
+  export const { setToken } = userSlice.actions
   
   export default userSlice.reducer

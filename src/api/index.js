@@ -1,9 +1,9 @@
 import request from '@/axios';
 import qs from 'qs'
 
-export function getSignMsg(data) {
+export function login(data) {
     return request({
-        url: "/api/v1/getSign",
+        url: "/i/api/conf/login",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
         },
@@ -12,9 +12,9 @@ export function getSignMsg(data) {
     });
 }
 
-export function submit(data) {
+export function register(data) {
     return request({
-        url: "/api/v1/submit",
+        url: "/i/api/conf/reg",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
         },
@@ -23,22 +23,11 @@ export function submit(data) {
     });
 }
 
-export function check(data) {
-    return request({
-        url: "/api/v1/check",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
-        method: "get",
-        params: data,
-    });
-}
-
-export function getJson(uri) {
-    return request({
-        url: uri,
-        withCredentials: false,
-        cache: false,
-        method: "get",
-    });
-}
+// export function getJson(uri) {
+//     return request({
+//         url: uri,
+//         withCredentials: false,
+//         cache: false,
+//         method: "get",
+//     });
+// }

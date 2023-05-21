@@ -71,11 +71,11 @@ const Home = () => {
                         </div>
 
                         {/* 底部按钮区 */}
-                        <div className='flex items-center w-full px-8 pb-5'>
+                        <div className='bottom-container flex items-center w-full px-8 pb-5'>
                             <Dropdown menu={{ items: menus }} trigger={['click']} placement="top">
-                                <button className='text-base bg-black text-white py-3 px-8 rounded-xl flex items-center'>
-                                    <p className='mr-4'>任务类型</p><PlayCircleFilled className='transform rotate-90'/>
-                                </button>
+                                <Button type="primary" className='text-base py-3 px-8 rounded-xl flex items-center'>
+                                    <div className='mr-4'>任务类型</div><PlayCircleFilled className='transform rotate-90'/>
+                                </Button>
                             </Dropdown>
                             <div className='bg-white rounded-xl flex-1 overflow-hidden py-3 px-4 mx-4 flex items-center gap-x-3'>
                                 <input type="text" className='h-[1.5rem] flex-1 outline-none'/>
@@ -84,7 +84,7 @@ const Home = () => {
                                 <img src={Attachment} className='w-6 cursor-pointer hover:opacity-60' />
                                 <img src={Link} className='w-6 cursor-pointer hover:opacity-60' />
                             </div>
-                            <button className='text-base bg-black text-white py-3 px-8 rounded-xl'>发送</button>
+                            <Button type="primary" className='py-3 px-8 rounded-xl'>发送</Button>
                         </div>
                     </div>
                 </Content>
