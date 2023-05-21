@@ -51,7 +51,7 @@ const Register = () => {
                     <Row gutter={3}>
                         <Col span={18}>
                             <Form.Item
-                                name="captcha"
+                                name="email"
                                 noStyle
                                 rules={[
                                     {
