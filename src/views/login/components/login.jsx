@@ -1,7 +1,7 @@
 import React, { useState, Fragment } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom'
-import { setToken } from '@/store/module/user.js'
+import { setToken, setUser } from '@/store/module/user.js'
 import { Button, Form, Input, notification } from 'antd';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { login } from '@/api'
@@ -11,7 +11,8 @@ const Login = () => {
     const token = useSelector((state) => state.user.token)
     const dispatch = useDispatch()
     // data
-    const [loginType, setLoginType] = useState('');
+    const [loginType, setLoginType] = useState('login');
+    const [loading, setLoading] = useState(false);
     const [api, contextHolder] = notification.useNotification();
     const openNotificationWithIcon = (type, title) => {
         api[type]({
@@ -22,18 +23,22 @@ const Login = () => {
     const history = useHistory()
 
     const onFinish = (params) => {
+        setLoading(true)
         login({
             ...params
         }).then((res) => {
-            dispatch(setToken(1))
-            history.push('home')
             if (res.code == 100) {
+                dispatch(setToken(res.data.token))
+                dispatch(setUser(res.data))
+                history.push('home')
                 openNotificationWithIcon('success', res.msg)
             } else {
                 openNotificationWithIcon('error', res.msg)
             }
+            setLoading(false)
         }).catch((err) => {
-            console.log('err->', err)
+            setLoading(false)
+            console.log('err:', err)
         });
     }
 
@@ -95,7 +100,7 @@ const Login = () => {
                 <Form.Item
                     style={{textAlign: 'center'}}
                 >
-                    <Button size='large' type="primary" htmlType="submit" style={{padding: '0px 24px', borderRadius: '12px',}}> Login </Button>
+                    <Button loading={loading} size='large' type="primary" htmlType="submit" style={{padding: '0px 24px', borderRadius: '12px',}}> Login </Button>
                 </Form.Item>
             </Form>
         </Fragment>

@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from "react";
 import { Layout, Avatar, Dropdown } from 'antd'
-import { MessageOutlined, BellOutlined, SettingOutlined } from '@ant-design/icons'
+import { MessageOutlined, BellOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons'
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom'
 import { setToken } from '@/store/module/user.js'
@@ -15,18 +15,12 @@ const menus = [
         key: '1',
         label: 'Logout',
         className: '',
-    },
-    {
-        key: '2',
-        label: 'options02',
-        className: '',
-    },
+    }
 ]
 
-
-
 const HeaderComponent = () => {
-    const loginState = useSelector((state) => state.user.loginState)
+    const token = useSelector((state) => state.user.token)
+    const user = useSelector((state) => state.user.user)
     const dispatch = useDispatch()
     const history = useHistory()
 
@@ -48,7 +42,7 @@ const HeaderComponent = () => {
             </div>
             <Dropdown menu={{ items: menus, onClick: onClick }} placement="bottomRight">
                 <div className="flex items-center cursor-pointer ml-4">
-                    <Avatar size="36" />
+                    <Avatar size="36" style={{ backgroundColor: '#63C36D' }} icon={<UserOutlined />} />
                     <img src={Arrow} className="w-2 ml-2" alt="" />
                 </div>
             </Dropdown>

@@ -13,13 +13,6 @@ const LoginMain = () => {
     const history = useHistory()
     const [loginType, setLoginType] = useState('');
 
-    // useEffect(() => {
-    //     // 已登录
-    //     if (!!token) {
-    //         gotoHome()
-    //     }
-    // }, [])
-
     const gotoHome = () => {
         history.push('/home')
     }

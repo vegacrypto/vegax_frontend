@@ -1,15 +1,16 @@
 import React, { Fragment, useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux'
-import { Layout, Dropdown, Tabs, Button } from 'antd';
+import { Layout, Dropdown, Tabs, Button, Input, message } from 'antd';
 import { PlayCircleFilled } from '@ant-design/icons'
+import { chatHistory, chatSave } from '@/api'
 import Header from '@/components/header'
-import './home.less';
 import Link from '@/common/svg/link.svg'
 import Image from '@/common/svg/image.svg'
 import Voice from '@/common/svg/voice.svg'
 import Attachment from '@/common/svg/attachment.svg'
 import BotImg from '@/common/svg/bot.svg'
 import LikeBox from '@/components/likebox'
+import './home.less';
 
 const { Content } = Layout
 
@@ -48,9 +49,53 @@ const tabs = [
 
 
 const Home = () => {
+    const [historyData, setHistoryData] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [sendLoading, setSendLoading] = useState(false);
+    const [prompt, setPrompt] = useState('');
+    const [messageApi, contextHolder] = message.useMessage();
+
+    const handlePromptChange = (e) => {
+        setPrompt(e.target.value)
+    }
+    const handlePressEnter = (e) => {
+        if (e.key === 'Enter') {
+            handleSaveChat()
+        }
+    }
+
+    const handleSaveChat = () => {
+        if (!prompt) {
+            return;
+            // messageApi.open({
+            //     type: 'warning',
+            //     content: 'This is a success message',
+            // });
+        }
+        setSendLoading(true)
+        chatSave({
+            'prompt': prompt,
+            'task_code': 'text'
+        }).then(res => {
+            setSendLoading(false)
+            setPrompt('')
+        }).catch(err => {
+            console.log('err:', err)
+            setSendLoading(false)
+        })
+    }
+
+    useEffect(() => {
+        chatHistory().then(res => {
+            if (res.code == 100) {
+                setHistoryData(res.data)
+            }
+        })
+    }, [currentPage])
     
     return (
         <Fragment>
+            {contextHolder}
             <Layout>
                 <Header />
                 <Content className="home-container bg-[#F7F7F7] font-sans">
@@ -58,9 +103,13 @@ const Home = () => {
 
                         {/* 对话内容 */}
                         <div className='flex-1 overflow-y-scroll w-full px-8'>
-                            <div className='chat-item flex right'>
-                                <div className='message text-sm'>什么是区块链？</div>
-                            </div>
+                                {
+                                    historyData.map((v, i) => {
+                                        return <div key={i} className='chat-item flex right'>
+                                            <div className='message text-sm'>{v.Content}</div>
+                                        </div>
+                                    })
+                                }
                             <div className='chat-item flex left'>
                                 <img className='w-10 avatar' src={BotImg} alt="" />
                                 <div className='message text-sm'>
@@ -78,18 +127,17 @@ const Home = () => {
                                 </Button>
                             </Dropdown>
                             <div className='bg-white rounded-xl flex-1 overflow-hidden py-3 px-4 mx-4 flex items-center gap-x-3'>
-                                <input type="text" className='h-[1.5rem] flex-1 outline-none'/>
+                                <Input value={prompt} onPressEnter={handlePressEnter} onChange={handlePromptChange} bordered={false} className='h-[1.5rem] flex-1 outline-none'/>
                                 <img src={Image} className='w-6 cursor-pointer hover:opacity-60' />
                                 <img src={Voice} className='w-6 cursor-pointer hover:opacity-60' />
                                 <img src={Attachment} className='w-6 cursor-pointer hover:opacity-60' />
                                 <img src={Link} className='w-6 cursor-pointer hover:opacity-60' />
                             </div>
-                            <Button type="primary" className='py-3 px-8 rounded-xl'>发送</Button>
+                            <Button onClick={handleSaveChat} loading={sendLoading} type="primary" className='py-3 px-8 rounded-xl'>发送</Button>
                         </div>
                     </div>
                 </Content>
             </Layout>
-            
         </Fragment>
     )
 }

@@ -33,7 +33,7 @@ function App() {
                 token: {
                     colorPrimary: '#333333',
                     controlOutline: 'rgba(0, 0, 0, 0.1)',
-                    colorBgTextHover: 'rgba(255, 255, 255, 0.9)'
+                    colorBgTextHover: 'rgba(255, 255, 255, 0.9)',
                 },
             }}
         >

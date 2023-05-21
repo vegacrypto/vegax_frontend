@@ -8,7 +8,7 @@ export function login(data) {
           "Content-Type": "application/x-www-form-urlencoded",
         },
         method: "post",
-        data: qs.stringify(data),
+        data: data,
     });
 }
 
@@ -19,7 +19,29 @@ export function register(data) {
           "Content-Type": "application/x-www-form-urlencoded",
         },
         method: "post",
-        data: qs.stringify(data),
+        data: data,
+    });
+}
+
+export function chatHistory(data = {}) {
+    return request({
+        url: "/i/api/chat/history",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        method: "post",
+        data: data,
+    });
+}
+
+export function chatSave(data) {
+    return request({
+        url: "/i/api/chat/save",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        method: "post",
+        data: data,
     });
 }
 
