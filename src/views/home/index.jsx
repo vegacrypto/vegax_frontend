@@ -2,7 +2,7 @@ import React, { Fragment, useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux'
 import { Layout, Dropdown, Tabs, Button, Input, message } from 'antd';
 import { PlayCircleFilled } from '@ant-design/icons'
-import { chatHistory, chatSave } from '@/api'
+import { chatHistory, chatSave, taskList } from '@/api'
 import Header from '@/components/header'
 import Link from '@/common/svg/link.svg'
 import Image from '@/common/svg/image.svg'
@@ -13,21 +13,6 @@ import LikeBox from '@/components/likebox'
 import './home.less';
 
 const { Content } = Layout
-
-const menus = [
-    {
-      label: 'Clicking me will not close the menu.',
-      key: '1',
-    },
-    {
-      label: 'Clicking me will not close the menu also.',
-      key: '2',
-    },
-    {
-      label: 'Clicking me will close the menu.',
-      key: '3',
-    },
-]
 
 const tabs = [
     {
@@ -54,6 +39,8 @@ const Home = () => {
     const [sendLoading, setSendLoading] = useState(false);
     const [prompt, setPrompt] = useState('');
     const [messageApi, contextHolder] = message.useMessage();
+
+    const [menus, setMenus] = useState([]);
 
     const handlePromptChange = (e) => {
         setPrompt(e.target.value)
@@ -89,6 +76,13 @@ const Home = () => {
         chatHistory().then(res => {
             if (res.code == 100) {
                 setHistoryData(res.data)
+            }
+        })
+
+        taskList().then(res => {
+            if (res.code == 100) {
+                console.log(res.data)
+                setMenus(res.data)
             }
         })
     }, [currentPage])

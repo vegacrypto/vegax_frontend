@@ -45,6 +45,17 @@ export function chatSave(data) {
     });
 }
 
+export function taskList (data = {}) {
+  return request({
+    url: "/i/api/conf/tasks",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    method: "get",
+    data: data,
+  });
+}
+
 // export function getJson(uri) {
 //     return request({
 //         url: uri,
