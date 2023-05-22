@@ -4,3 +4,26 @@
         border-bottom: 1px solid #333;
     }
 }
+@keyframes jifen {
+    0% {
+        transform: scale(0.7) translateY(0px);
+        opacity: 0;
+    }
+    80% {
+        transform: scale(1.2) translateY(-18px);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1) translateY(-22px);
+        opacity: 0;
+    }
+}
+.anima-ele {
+    opacity: 0;
+    transform: scale(0.7);
+    transition: all .3s;
+    z-index: 0;
+    &.active {
+        animation: jifen 1.2s ease-in-out 1;
+    }
+}

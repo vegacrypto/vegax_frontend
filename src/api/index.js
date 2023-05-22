@@ -67,6 +67,17 @@ export function taskList (data = {}) {
   });
 }
 
+export function setop (data = {}) {
+  return request({
+    url: "/i/api/chat/setop",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    method: "post",
+    data: data,
+  });
+}
+
 // export function getJson(uri) {
 //     return request({
 //         url: uri,
