@@ -93,29 +93,35 @@ const Home = () => {
         setSendLoading(true)
         chatSave({
             'prompt': prompt,
-            'task_code': 'text'
+            'task_code': taskCode
         }).then(async res => {
-            setHistoryData(prevData => {
-                prevData.push({
-                    ...res.data,
-                    bots: []
+            if (res.code == 100) {
+                setHistoryData(prevData => {
+                    prevData.push({
+                        ...res.data,
+                        bots: []
+                    })
+                    return prevData;
+                });
+                setSendLoading(false)
+                setPrompt('')
+    
+                if (res.data.Status == 0) {
+                    setInputDisabeld(true)
+                }
+                
+                setTimeout(() => {
+                    scrollToBottom()
+                }, 600)
+                
+                cycleBotsFun(res.data.Id)
+            } else {
+                setSendLoading(false)
+                messageApi.open({
+                    type: 'error',
+                    content: res.msg,
                 })
-                return prevData;
-            });
-            // historyData.push(res.data)
-            // setHistoryData(historyData)
-            setSendLoading(false)
-            setPrompt('')
-
-            if (res.data.Status == 0) {
-                setInputDisabeld(true)
             }
-            
-            setTimeout(() => {
-                scrollToBottom()
-            }, 600)
-            
-            cycleBotsFun(res.data.Id)
 
         }).catch(err => {
             console.log('err:', err)
