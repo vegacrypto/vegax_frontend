@@ -17,11 +17,16 @@ const LoginMain = () => {
         history.push('/home')
     }
 
+    const handleChildDataChange = (data) => {
+        console.log('data->', data)
+        setLoginType('login')
+    }
+
     return (
         <Fragment>
             <div className='login-container flex flex-col items-center justify-center'>
                 <div className='wrapper'>
-                    { loginType == 'register' ? <Register /> : <Login />}
+                    { loginType == 'register' ? <Register onDataChange={handleChildDataChange} /> : <Login />}
                     <div className='text-right w-full'>
                         {
                             loginType == 'register' ? 

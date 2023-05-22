@@ -2,13 +2,13 @@ import React, { Fragment } from "react";
 import { Button, Form, Input, Row, Col, notification } from 'antd';
 import { register } from '@/api'
 
-const Register = () => {
+const Register = ({ onDataChange }) => {
 
     const [api, contextHolder] = notification.useNotification();
     const openNotificationWithIcon = (type, title) => {
         api[type]({
             message: title,
-            duration: 2
+            duration: 3
         });
     };
 
@@ -18,6 +18,7 @@ const Register = () => {
         }).then((res) => {
             if (res.code == 100) {
                 openNotificationWithIcon('success', res.msg)
+                onDataChange('login');
             } else {
                 openNotificationWithIcon('error', res.msg)
             }

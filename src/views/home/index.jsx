@@ -1,8 +1,8 @@
 import React, { Fragment, useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux'
-import { Layout, Dropdown, Tabs, Button, Input, message } from 'antd';
+import { Layout, Dropdown, Button, Input, message } from 'antd';
 import { PlayCircleFilled } from '@ant-design/icons'
-import { chatHistory, chatSave, taskList } from '@/api'
+import { chatHistory, chatSave, taskList, chatById } from '@/api'
 import Header from '@/components/header'
 import Link from '@/common/svg/link.svg'
 import Image from '@/common/svg/image.svg'
@@ -11,33 +11,18 @@ import Attachment from '@/common/svg/attachment.svg'
 import BotImg from '@/common/svg/bot.svg'
 import LikeBox from '@/components/likebox'
 import './home.less';
+import react from '@heroicons/react';
 
 const { Content } = Layout
-
-const tabs = [
-    {
-        key: '1',
-        label: `文本`,
-        children: `Content of Tab Pane 1`,
-    },
-    {
-      key: '2',
-      label: `图文`,
-      children: `Content of Tab Pane 2`,
-    },
-    {
-      key: '3',
-      label: `视频`,
-      children: `Content of Tab Pane 3`,
-    },
-]
-
 
 const Home = () => {
     const [historyData, setHistoryData] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [sendLoading, setSendLoading] = useState(false);
+    const [inputDisabeld, setInputDisabeld] = useState(false);
     const [prompt, setPrompt] = useState('');
+    const [taskCode, setTaskCode] = useState('text');
+
     const [messageApi, contextHolder] = message.useMessage();
 
     const [menus, setMenus] = useState([]);
@@ -50,22 +35,88 @@ const Home = () => {
             handleSaveChat()
         }
     }
+    const handleMenuTypeClick = (e) => {
+        setTaskCode(e.key)
+    }
+    const scrollToBottom = () => {
+        let el = document.getElementsByClassName(`chat-item`)
+        el[el.length - 1]?.scrollIntoView({ //没有写Boolean参数 ,默认是true;
+            behavior: "smooth",
+            block: "center", 
+            inline: "start"	
+        })
+    }
+
+    const cycleBotsFun = async (chatId) => {
+        const intervalId = setInterval(async () => {
+            try {
+                const response = await chatById({ chat_id: chatId });
+                const data = await response.data
+                
+                // 判断返回值，如果满足条件则停止请求
+                if (data && data.length > 0 && (data.Expect == data.Status)) {
+                    // 停止重复请求
+                    clearInterval(intervalId);
+                    setInputDisabeld(false)
+                   
+                    setHistoryData(prevData => {
+                        const updatedData = prevData.map((item, index) => {
+                          if (index === prevData.length - 1) {
+                            // 更新特定对象的属性值
+                            return {
+                              ...item,
+                              bots: data
+                            };
+                          }
+                          return item;
+                        });
+                        return updatedData;
+                    });
+
+                    setTimeout(() => {
+                        scrollToBottom()
+                    }, 600)
+                    
+                }
+            } catch (error) {
+                // 处理错误
+                console.error(error);
+            }
+        }, 700)
+    }
 
     const handleSaveChat = () => {
         if (!prompt) {
             return;
-            // messageApi.open({
-            //     type: 'warning',
-            //     content: 'This is a success message',
-            // });
         }
+
         setSendLoading(true)
         chatSave({
             'prompt': prompt,
             'task_code': 'text'
-        }).then(res => {
+        }).then(async res => {
+            setHistoryData(prevData => {
+                prevData.push({
+                    ...res.data,
+                    bots: []
+                })
+                return prevData;
+            });
+            // historyData.push(res.data)
+            // setHistoryData(historyData)
             setSendLoading(false)
             setPrompt('')
+
+            if (res.data.Status == 0) {
+                setInputDisabeld(true)
+            }
+            
+            setTimeout(() => {
+                scrollToBottom()
+            }, 600)
+            
+            cycleBotsFun(res.data.Id)
+
         }).catch(err => {
             console.log('err:', err)
             setSendLoading(false)
@@ -73,15 +124,38 @@ const Home = () => {
     }
 
     useEffect(() => {
+        
         chatHistory().then(res => {
             if (res.code == 100) {
-                setHistoryData(res.data)
+                let originalArray = res.data
+
+                let resultArray = originalArray.reverse().reduce((acc, item) => {
+                    if (item.ChatId !== 0) {
+                        const matchedItem = originalArray.find(obj => obj.Id === item.ChatId);
+                    
+                        if (matchedItem) {
+                            const matchedIndex = acc.findIndex(obj => obj.Id === item.ChatId);
+                        
+                            if (matchedIndex !== -1) {
+                                acc[matchedIndex].bots.push(item);
+                            } else {
+                                acc.push({ ...matchedItem, bots: [item] });
+                            }
+                        }
+                    }
+                
+                    return acc;
+                }, []);
+                setHistoryData(resultArray)
+
+                setTimeout(() => {
+                    scrollToBottom()
+                }, 600)
             }
         })
 
         taskList().then(res => {
             if (res.code == 100) {
-                console.log(res.data)
                 setMenus(res.data)
             }
         })
@@ -97,31 +171,37 @@ const Home = () => {
 
                         {/* 对话内容 */}
                         <div className='flex-1 overflow-y-scroll w-full px-8'>
-                                {
-                                    historyData.map((v, i) => {
-                                        return <div key={i} className='chat-item flex right'>
-                                            <div className='message text-sm'>{v.Content}</div>
+                            {
+                                (historyData || []).map((item, index) => {
+                                    return <div key={index}>
+                                        <div className='chat-item flex right'>
+                                            <div className='message text-sm'>{item.Content}</div>
                                         </div>
-                                    })
-                                }
-                            <div className='chat-item flex left'>
-                                <img className='w-10 avatar' src={BotImg} alt="" />
-                                <div className='message text-sm'>
-                                    <Tabs defaultActiveKey="1" items={tabs}/>
-                                    <LikeBox/>
-                                </div>
-                            </div>
+                                        {
+                                            item.bots 
+                                                ? <div className='chat-item flex left'>
+                                                        <img className='w-10 avatar' src={BotImg} alt="" />
+                                                        <div className='message text-sm'>
+                                                            <LikeBox list={item.bots || []}/>
+                                                        </div>
+                                                    </div> 
+                                                : ''
+                                        }
+                                        
+                                    </div>
+                                })
+                            }
                         </div>
 
                         {/* 底部按钮区 */}
                         <div className='bottom-container flex items-center w-full px-8 pb-5'>
-                            <Dropdown menu={{ items: menus }} trigger={['click']} placement="top">
+                            <Dropdown menu={{ items: menus, onClick: handleMenuTypeClick }} trigger={['click']} placement="top">
                                 <Button type="primary" className='text-base py-3 px-8 rounded-xl flex items-center'>
-                                    <div className='mr-4'>任务类型</div><PlayCircleFilled className='transform rotate-90'/>
+                                    <div className='mr-4 uppercase'>{taskCode}</div><PlayCircleFilled className='transform rotate-90'/>
                                 </Button>
                             </Dropdown>
                             <div className='bg-white rounded-xl flex-1 overflow-hidden py-3 px-4 mx-4 flex items-center gap-x-3'>
-                                <Input value={prompt} onPressEnter={handlePressEnter} onChange={handlePromptChange} bordered={false} className='h-[1.5rem] flex-1 outline-none'/>
+                                <Input disabled={inputDisabeld} value={prompt} onPressEnter={handlePressEnter} onChange={handlePromptChange} bordered={false} className='h-[1.5rem] flex-1 outline-none'/>
                                 <img src={Image} className='w-6 cursor-pointer hover:opacity-60' />
                                 <img src={Voice} className='w-6 cursor-pointer hover:opacity-60' />
                                 <img src={Attachment} className='w-6 cursor-pointer hover:opacity-60' />

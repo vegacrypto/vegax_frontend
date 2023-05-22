@@ -45,6 +45,17 @@ export function chatSave(data) {
     });
 }
 
+export function chatById(data = {}) {
+    return request({
+        url: "/i/api/chat/bychat",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        method: "post",
+        data: data,
+    });
+}
+
 export function taskList (data = {}) {
   return request({
     url: "/i/api/conf/tasks",
