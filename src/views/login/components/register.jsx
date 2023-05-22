@@ -81,7 +81,7 @@ const Register = ({ onDataChange }) => {
                         },
                     ]}
                 >
-                    <Input placeholder="code" />
+                    <Input placeholder="enter 1234 for testing" />
                 </Form.Item>
                 <Form.Item
                     name="passwd"
