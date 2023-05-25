@@ -97,7 +97,7 @@ const Home = () => {
         chatSave({
             'prompt': prompt,
             'task_code': taskCode,
-            'external_code': entercode,
+            'external': entercode,
         }).then(async res => {
             if (res.code == 100) {
                 setHistoryData(prevData => {
