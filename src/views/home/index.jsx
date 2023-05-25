@@ -1,6 +1,6 @@
 import React, { Fragment, useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux'
-import { Layout, Dropdown, Button, Input, message } from 'antd';
+import { Layout, Dropdown, Button, Input, message, Checkbox } from 'antd';
 import { PlayCircleFilled } from '@ant-design/icons'
 import { chatHistory, chatSave, taskList, chatById } from '@/api'
 import Header from '@/components/header'
@@ -11,7 +11,6 @@ import Attachment from '@/common/svg/attachment.svg'
 import BotImg from '@/common/svg/bot.svg'
 import LikeBox from '@/components/likebox'
 import './home.less';
-import react from '@heroicons/react';
 
 const { Content } = Layout
 
@@ -21,6 +20,7 @@ const Home = () => {
     const [sendLoading, setSendLoading] = useState(false);
     const [inputDisabeld, setInputDisabeld] = useState(false);
     const [prompt, setPrompt] = useState('');
+    const [entercode, setEntercode] = useState('');
     const [taskCode, setTaskCode] = useState('text');
 
     const [messageApi, contextHolder] = message.useMessage();
@@ -35,6 +35,9 @@ const Home = () => {
             handleSaveChat()
         }
     }
+    const onCheckboxChange = (e) => {
+        setEntercode(e.target.checked ? 1 : '')
+    }
     const handleMenuTypeClick = (e) => {
         setTaskCode(e.key)
     }
@@ -47,14 +50,14 @@ const Home = () => {
         })
     }
 
-    const cycleBotsFun = async (chatId) => {
+    const cycleBotsFun = async (chatId, Expect) => {
         const intervalId = setInterval(async () => {
             try {
                 const response = await chatById({ chat_id: chatId });
                 const data = await response.data
                 
                 // 判断返回值，如果满足条件则停止请求
-                if (data && data.length > 0 && (data.Expect == data.Status)) {
+                if (data && data.length > 0 && (Expect == data.length)) {
                     // 停止重复请求
                     clearInterval(intervalId);
                     setInputDisabeld(false)
@@ -93,7 +96,8 @@ const Home = () => {
         setSendLoading(true)
         chatSave({
             'prompt': prompt,
-            'task_code': taskCode
+            'task_code': taskCode,
+            'external_code': entercode,
         }).then(async res => {
             if (res.code == 100) {
                 setHistoryData(prevData => {
@@ -114,7 +118,7 @@ const Home = () => {
                     scrollToBottom()
                 }, 600)
                 
-                cycleBotsFun(res.data.Id)
+                cycleBotsFun(res.data.Id, res.data.Expect)
             } else {
                 setSendLoading(false)
                 messageApi.open({
@@ -207,11 +211,15 @@ const Home = () => {
                                 </Button>
                             </Dropdown>
                             <div className='bg-white rounded-xl flex-1 overflow-hidden py-3 px-4 mx-4 flex items-center gap-x-3'>
-                                <Input disabled={inputDisabeld} value={prompt} onPressEnter={handlePressEnter} onChange={handlePromptChange} bordered={false} className='h-[1.5rem] flex-1 outline-none'/>
-                                <img src={Image} className='w-6 cursor-pointer hover:opacity-60' />
+                                <Input disabled={inputDisabeld} value={prompt} onChange={handlePromptChange} bordered={false} className='h-[1.5rem] flex-1 outline-none'/>
+                                {/* 图片、链接等类型 */}
+                                {/* <img src={Image} className='w-6 cursor-pointer hover:opacity-60' />
                                 <img src={Voice} className='w-6 cursor-pointer hover:opacity-60' />
                                 <img src={Attachment} className='w-6 cursor-pointer hover:opacity-60' />
-                                <img src={Link} className='w-6 cursor-pointer hover:opacity-60' />
+                                <img src={Link} className='w-6 cursor-pointer hover:opacity-60' /> */}
+                            </div>
+                            <div className='mr-2 checkbox-box py-2 pl-5 pr-3 rounded-full select-none'>
+                                <Checkbox onChange={onCheckboxChange}>实时数据</Checkbox>
                             </div>
                             <Button onClick={handleSaveChat} loading={sendLoading} type="primary" className='py-3 px-8 rounded-xl'>发送</Button>
                         </div>
