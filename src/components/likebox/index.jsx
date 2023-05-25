@@ -20,7 +20,7 @@ const LikeBox = (props) => {
 
 
     const handleSourceClick= (e) => {
-        let obj = dropList.filter(v => {
+        let obj = botsList.filter(v => {
             return e.key == v.key
         })[0]
         setSource(obj.label)
