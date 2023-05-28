@@ -13,6 +13,7 @@ import LikeBox from '@/components/likebox'
 import './home.less';
 
 const { Content } = Layout
+const { TextArea } = Input;
 
 const Home = () => {
     const [historyData, setHistoryData] = useState([]);
@@ -204,14 +205,17 @@ const Home = () => {
                         </div>
 
                         {/* 底部按钮区 */}
-                        <div className='bottom-container flex items-center w-full px-8 pb-5'>
+                        <div className='bottom-container flex items-end w-full px-8 pb-4 pt-2'>
                             <Dropdown menu={{ items: menus, onClick: handleMenuTypeClick }} trigger={['click']} placement="top">
                                 <Button type="primary" className='text-base py-3 px-8 rounded-xl flex items-center'>
                                     <div className='mr-4 uppercase'>{taskCode}</div><PlayCircleFilled className='transform rotate-90'/>
                                 </Button>
                             </Dropdown>
-                            <div className='bg-white rounded-xl flex-1 overflow-hidden py-3 px-4 mx-4 flex items-center gap-x-3'>
-                                <Input disabled={inputDisabeld} value={prompt} onChange={handlePromptChange} bordered={false} className='h-[1.5rem] flex-1 outline-none'/>
+                            <div className='bg-white rounded-xl flex-1 overflow-hidden py-3 px-4 mx-4 flex items-end gap-x-3'>
+                                <TextArea autoSize={{
+                                    minRows: 1,
+                                    maxRows: 3,
+                                }} disabled={inputDisabeld} value={prompt} onChange={handlePromptChange} bordered={false} className='h-[1.5rem] flex-1 outline-none'/>
                                 {/* 图片、链接等类型 */}
                                 {/* <img src={Image} className='w-6 cursor-pointer hover:opacity-60' />
                                 <img src={Voice} className='w-6 cursor-pointer hover:opacity-60' />

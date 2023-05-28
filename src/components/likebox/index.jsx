@@ -95,9 +95,9 @@ const LikeBox = (props) => {
                             </div>
                             <div className='ml-auto'>数据来源</div>
                             <Dropdown menu={{ items: botsList, onClick: handleSourceClick }} trigger={['click']} placement="bottom">
-                                <Button className='border border-[#EAF4F0] py-2 px-2 rounded-full flex items-center ml-2'>
+                                <button className={`dropdown-button flex items-center ml-2 ${botsList?.length > 1 ? 'special' : ''}`}>
                                     <span className='mr-4'>{source}</span><PlayCircleFilled className='transform rotate-90'/>
-                                </Button>
+                                </button>
                             </Dropdown>
                         </div>
                     </Fragment>
