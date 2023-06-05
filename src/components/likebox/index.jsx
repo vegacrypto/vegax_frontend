@@ -72,6 +72,9 @@ const LikeBox = (props) => {
             setOpState(dropList[0].op)
             setChatid(dropList[0].id)
         }
+        if(dropList[0].id==209) {
+            console.log("result;", dropList[0].content)
+        }
     }, [props.list])
 
 
@@ -83,7 +86,7 @@ const LikeBox = (props) => {
                 botsList?.length > 0 ? (
                     <Fragment >
                         <div className="title flex items-center pt-2 mb-2 uppercase"><div className="item py-2">{taskCode}</div></div>
-                        <div>{botAnswer}</div>
+                        <div className="bot-content">{botAnswer}</div>
                         <div className='flex items-center text-xs mt-8'>
                             <Button onClick={comingSoonFun} className='bg-[#EAF4F0] text-[#268D61] rounded-full flex items-center px-4 py-2'><img className='w-4 mr-1' src={Share}/><span>Share</span></Button>
                             <div className='border border-[#EAF4F0] flex items-center px-4 py-2 rounded-full ml-2 relative'>
